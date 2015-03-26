@@ -1,0 +1,50 @@
+<br /><br />
+<div id="view-content">
+	<!--p>View script for controller <b>user</b> and script/action name <b>profile</b></p-->
+</div>
+<?php  
+    $authorization =Zend_Auth::getInstance();
+    $info = $authorization->getIdentity();
+    if(!empty($info)){
+        $admin=$info->admin;
+        $userName=$info->userName;
+        $userImage=$info->userImage;
+        $userId=$info->userId;
+    }
+    
+    foreach ($this->user as $key=>$value):
+        if($key=='userImage'){
+           
+                $image=$value;
+            
+        }
+    endforeach;
+    //echo $this->user['userId']; exit();
+
+?>
+<div >
+    <img style="width: 150px; height: 120px;" src='<?php echo $this->baseUrl()?>/uploads/<?php echo $image; ?>' />
+&nbsp;&nbsp;<a href="<?php echo $this->baseUrl()?>/user/sendmessage?receiver=<?php echo $this->user['userId'];?>&receiverName=<?php echo $this->user['userName'];?>"><img src="<?php echo $this->baseUrl()?>/uploads/index2.jpeg"/></a>
+<?php if($userId==$this->user['userId']){?>
+&nbsp;&nbsp;<a href="<?php echo $this->baseUrl()?>/user/edit/id/<?php echo $this->user['userId'];?>"><img src="<?php echo $this->baseUrl()?>/uploads/index7.jpeg"/></a>
+<a href="<?php echo $this->baseUrl()?>/user/edit/id/<?php echo $this->user['userId'];?>"><img src="<?php echo $this->baseUrl()?>/uploads/index7.jpeg"/></a>
+    <?php }?>
+</div>
+<fieldset>
+<?php //echo $this->user['id']; echo $this->user['name']; exit(); ?>
+<!--a href="<!--?php echo $this->baseUrl()?>/user/edit/id/<!--?php echo $this->user['id'];?>" > Edit </a><br/-->
+<!--a href="<!--?php echo $this->baseUrl()?>/user/sendmessage?receiver=<!--?php echo $this->user['userId'];?>&receiverName=<!--?php echo $this->user['userName'];?>" ><img src="<?php echo $this->baseUrl()?>/uploads/index2.jpeg"/></a><br/-->
+
+<?php
+//echo $this->user['name']; exit();
+
+    foreach ($this->user as $key=>$value):
+        if($key!='password' and $key!='userId'and $key!='admin'and $key!='ban' and $key!='userImage'){
+           
+                echo $key." : ".$value ."<br/>"."<br/>";
+            
+        }
+    endforeach;
+ 
+?>
+</fieldset>

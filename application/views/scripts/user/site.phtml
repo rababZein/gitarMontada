@@ -1,0 +1,15 @@
+<html>
+<br /><br />
+<div id="view-content">
+	<!--p>View script for controller <b>user</b> and script/action name <b>site</b></p-->
+</div>
+<fieldset>
+<?php
+    if($this->site['lockSite']==0){
+        echo "<p> your site is Unable , If you when to make it Enable <a href=".$this->baseUrl()."/user/locksite?lock=1'>Click</a>";
+    }else{
+        echo "<p> your site is Enable , If you when to make it Unable <a href='".$this->baseUrl()."/user/locksite?lock=0'>Click</a>";
+    }
+?>
+</fieldset>
+</html>

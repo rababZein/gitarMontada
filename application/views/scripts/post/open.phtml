@@ -1,0 +1,211 @@
+
+
+<?php  
+  // var_dump($this->userNAME) ; exit();
+    $authorization =Zend_Auth::getInstance();
+    $info = $authorization->getIdentity();
+    $userName=$info->userName;
+    $userImage=$info->userImage;
+    $signature=$info->signature;
+    $idUser=$info->userId;
+    
+   // echo $userImage; exit();
+    
+
+?>
+
+<br /><br />
+<div id="view-content">
+	<!--p>View script for controller <b>post</b> and script/action name <b>open</b></p-->
+</div>
+<html>
+<div style="background-color:#EDC9AF; margin:20px;">
+   
+<?php
+
+  //  echo $this->admin ;
+   // exit();
+     if($this->admin){
+         if ($this->lockPost==0){
+                echo "<a href=".$this->baseUrl()."/post/lock?postId=".$this->post['postId']."&lock=1><p style='text-align: right;'>Lock Post</p></a><br>"; 
+            }else{
+                echo "<a href=".$this->baseUrl()."/post/lock?postId=".$this->post['postId']."&lock=0><p style='text-align: right;'>UnLock Post</p></a><br>"; 
+            }
+                     
+      
+     }
+echo "<a href='".$this->baseUrl()."/user/profile/id/".$this->userPost['userId'] ." '>".$this->userPost['userName']."</a><br/>";     
+echo "<img src='". $this->baseUrl()."/uploads/".$this->userPost['userImage']."' />". "<br />";          
+echo "<h3 style='text-align: center;'>".$this->post['postName'] ."</h3>";  
+//echo "published by:"."<br />";
+//echo "<a href='".$this->baseUrl()."/user/profile/id/".$this->userPost['userId'] ." '>".$this->userPost['userName']."</a><br/>";     
+//echo "<img src='". $this->baseUrl()."/uploads/".$this->userPost['userImage']."' />". "<br />";     
+echo "<p style=' text-align: center;'>".$this->post['postContain']." </p>". "<br />";
+echo "<h3 style=' text-align: center;'>".$this->signatureUser[$this->userPost['userId']]."</h3>";
+?>
+  </div> 
+
+<?php
+for($i = 0; $i<count($this->comments); $i++){?>
+     <?php $y=$this->comments[$i]['commentId']+222;
+       echo "<div id='".$y."' style='background-color: #F3E5AB; margin:20px;'>";?>
+<?php
+     
+    foreach ($this->comments[$i] as $key=>$value): 
+
+          if($key=='userId'){
+              $idOfUser=$value;
+          }
+          if($key=='commentContain'){
+              //echo $this->userName[$i]."<br />";
+              
+              echo "<a href='".$this->baseUrl()."/user/profile/id/".$idOfUser." '>".$this->userNAME[$i]."</a>"."<br />";
+              echo "<img src='". $this->baseUrl()."/uploads/".$this->image[$i]."' />"."<br />";
+              $y=$this->comments[$i]['commentId']+123;
+              echo "<p id='".$y."' style='text-align: center;'>".$value."</p>"."<br />";
+              echo "<h3 style=' text-align: center;'>".$this->signatureUser[$i]."</h3>";
+          }
+          
+         
+         
+    
+    endforeach;//}
+    if($this->admin){
+        $x=$this->comments[$i]['commentId']+$this->post['postId'];        //echo $x;        exit();
+    echo "<div id='".$x."'>";
+   // echo "<a href=".$this->baseUrl()."/comment/delete/postId/".$this->post['postId']."/commentId/".$this->comments[$i]['commentId']."> Delete Comment</a><br>"; 
+   // echo "<a href=".$this->baseUrl()."/comment/edit?postId=".$this->post['postId']."&commentId=".$this->comments[$i]['commentId']."> Edit Comment</a><br>"; 
+   
+    echo "<button onclick='editcomm(".$this->post['postId'].",".$this->userId.",".$this->comments[$i]['commentId'].")'>Edit</button>";
+    echo "<button onclick='delcomm(".$this->post['postId'].",".$this->comments[$i]['commentId'].")'>Delete</button>";
+    echo '</div>';
+    }
+    else{
+        
+        if($this->userId==$idOfUser){
+             $x=$this->comments[$i]['commentId']+$this->post['postId'];
+             echo "<div id='".$x."'>";
+             echo "<a href=".$this->baseUrl()."/comment/delete/postId/".$this->post['postId']."/commentId/".$this->comments[$i]['commentId']."> Delete Comment</a><br>"; 
+             echo "<a href=".$this->baseUrl()."/comment/edit?postId=".$this->post['postId']."&commentId=".$this->comments[$i]['commentId']."> Edit Comment</a><br>"; 
+             echo "<button onclick='editcomm(".$this->post['postId'].",".$this->userId.",".$this->comments[$i]['commentId'].")'>Edit</button>";
+             echo "<button onclick='delcomm(".$this->post['postId'].",".$this->comments[$i]['commentId'].")'>Delete</button>";
+             echo '</div>';
+             
+        }
+      
+    }
+    
+    ?> </div> 
+    <?php
+    }
+    ?>
+    
+
+      
+<br />
+<br />
+<B><u>Reply</u></B>
+<?php
+
+            if ($this->lockPost==0){
+                echo $this->commentForm;
+            }
+           
+?>
+
+
+<script>
+    var flag=0;
+    
+       
+    function editcomm(postID,userID,commID){
+        //alert(postID); 
+        if(flag==0){
+            
+        flag=1;
+        var input = document.createElement("input");
+        input.type = "text";
+        input.className = "updateComm";
+        y=commID+123;
+        var commBody=document.getElementById(y);
+        
+        
+        //alert(commBody.innerHTML);
+        input.value=commBody.innerHTML;
+        t=commID+postID;
+        //alert(t);
+        var update=document.getElementById(t);
+        //alert(update.innerHTML);
+        update.appendChild(input);
+        var button = document.createElement("input");
+        button.type = 'button'; 
+        button.value = 'editComment';
+       
+        button.onclick = function() { 
+            commentContain=input.value;        
+            commBody.innerHTML=input.value;
+            ajax(commentContain,commID);
+            input.remove();
+            button.remove();
+            flag=0;
+        };
+        update.appendChild(button);
+    }
+    }
+    function delcomm(postId,commentId){
+        y=commentId+222;
+       
+        var commBody=document.getElementById(y);
+        ajaxdel(postId,commentId);
+        commBody.remove();
+
+//        
+//        
+//       
+     }
+      function ajaxdel (postId,commentId) { 
+            
+		if (window.XMLHttpRequest) {
+			ajaxRequest=new XMLHttpRequest(); 
+			
+		}else { 
+			ajaxRequest=new ActiveXObject("Microsoft.XMLHTTP"); 
+		}
+              
+                
+                ajaxRequest.open("GET","../../ajaxdel/postId/"+postId+"/commentId/"+commentId,true);
+		ajaxRequest.send(); 
+		
+		ajaxRequest.onreadystatechange= function() {
+
+			if(ajaxRequest.readyState === 4 && ajaxRequest.status === 200) { 
+				//document.getElementById("result").innerHTML = "done";
+                         
+			} 
+		}; 
+	}
+    
+    
+     function ajax (commentContain,commID) { 
+		
+		if (window.XMLHttpRequest) {
+			ajaxRequest=new XMLHttpRequest(); 
+			
+		}else { 
+			ajaxRequest=new ActiveXObject("Microsoft.XMLHTTP"); 
+		}
+              
+                ajaxRequest.open("GET","../../cmm/body/"+commentContain+"/commID/"+commID,true);
+		ajaxRequest.send(); 
+     
+		ajaxRequest.onreadystatechange= function() {
+
+			if(ajaxRequest.readyState === 4 && ajaxRequest.status === 200) { 
+				
+                                //alert('done');
+			} 
+		}; 
+	}
+        
+</script>
+</html>

@@ -1,0 +1,101 @@
+<html>
+<head>
+	
+	<style>
+		* {font-family: Helvetica Neue, Arial, sans-serif; }
+
+
+		h1, table { text-align: center; }
+
+		table {border-collapse: collapse;  width: 70%; margin: 0 auto 5rem;}
+
+		th, td { padding: 1.5rem; font-size: 1.3rem; }
+
+		tr {background: hsl(50, 50%, 80%); }
+
+		tr, td { transition: .4s ease-in; } 
+
+		tr:first-child {background: hsla(12, 100%, 40%, 0.5); }
+
+		tr:nth-child(even) { background: hsla(50, 50%, 80%, 0.7); }
+
+		td:empty {background: hsla(50, 25%, 60%, 0.7); }
+
+		tr:hover:not(#firstrow), tr:hover td:empty {background: #ff0; pointer-events: visible;}
+		tr:hover:not(#firstrow) { transform: scale(1.2); font-weight: 700; box-shadow: 0px 3px 7px rgba(0, 0, 0, 0.5);}
+
+		
+	    img{
+		width: 85px;
+		height:70px;
+	    }
+	    table{
+		font-style: italic;
+		color:#000080;
+	    }
+		
+	</style>	
+</head>
+
+<br /><br />
+<div id="view-content">
+	<!--p>View script for controller <b>User</b> and script/action name <b>add</b></p-->
+</div>
+<table>
+    <tr>
+        <?php
+            for($i = 0; $i<1; $i++){
+                foreach ($this->users[$i] as $key=>$value):
+                    if($key!='password'){
+                        echo "<td>".$key."</td>";
+                    }
+                endforeach;
+            }
+        ?>
+        <td> action </td>    
+    </tr>   
+        <?php
+
+            for($i = 0; $i<count($this->users); $i++){
+        ?>
+                <tr>
+                    <?php
+                        foreach ($this->users[$i] as $key=>$value):
+                            if($key=='ban'){
+                                   if($value==0){
+                                       echo "<td>"."<a href='".$this->baseUrl()."/user/ban?id=".$this->users[$i]['userId']."&ban=1' > Ban </a>"."</td>";
+                                   }else{
+                                       echo "<td>"."<a href='".$this->baseUrl()."/user/ban?id=".$this->users[$i]['userId']."&ban=0' > UnBan </a>"."</td>";
+                                   } 
+                            }
+                            if($key=='admin'){
+                                if($value==0){
+                                       echo "<td>"."<a href='".$this->baseUrl()."/user/admin?id=".$this->users[$i]['userId']."&admin=1' > Admin </a>"."</td>";
+                                   }else{
+                                       echo "<td>"."<a href='".$this->baseUrl()."/user/admin?id=".$this->users[$i]['userId']."&admin=0' > Normal user </a>"."</td>";
+                                   }
+                            }
+                            if($key!='ban' && $key!='admin' && $key!='password'){
+                                if($key=='userName'){
+                                  echo "<td>"."<a href='".$this->baseUrl()."/user/profile/id/". $this->users[$i]['userId']." '>".$value."</a>"."</td>";  
+                                }else{
+                                    if($key=='userImage'){
+                                        echo "<td>"."<img src='". $this->baseUrl()."/uploads/".$value."' />"."</td>";
+                                    }else{
+                                        echo "<td>".$value ."</td>";
+                                    }
+                                }
+                            }
+                        endforeach;
+                    ?>
+                        <td><a href="<?php echo $this->baseUrl()?>/user/edit/id/<?php echo $this->users[$i]['userId'];?>" > Edit </a>
+                        <a href="<?php echo $this->baseUrl()?>/user/delete/id/<?php echo $this->users[$i]['userId'];?>" > Delete </a>
+                        
+                        </td>
+                </tr>
+                    <?php
+//echo str_repeat("*", 80)."<br />";
+                        }
+                    ?>
+</table>
+</html>

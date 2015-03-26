@@ -1,0 +1,170 @@
+<html>
+<head>
+	
+	<style>
+		* {font-family: Helvetica Neue, Arial, sans-serif; }
+
+
+		h1, table { text-align: center; }
+
+		table {border-collapse: collapse;  width: 70%; margin: 0 auto 5rem;}
+
+		th, td { padding: 1.5rem; font-size: 1.3rem; }
+
+		tr {background: hsl(50, 50%, 80%); }
+
+		tr, td { transition: .4s ease-in; } 
+
+		tr:first-child {background: hsla(12, 100%, 40%, 0.5); }
+
+		tr:nth-child(even) { background: hsla(50, 50%, 80%, 0.7); }
+
+		td:empty {background: hsla(50, 25%, 60%, 0.7); }
+
+		tr:hover:not(#firstrow), tr:hover td:empty {background: #ff0; pointer-events: visible;}
+		tr:hover:not(#firstrow) { transform: scale(1.2); font-weight: 700; box-shadow: 0px 3px 7px rgba(0, 0, 0, 0.5);}
+
+		
+	    img{
+		width: 85px;
+		height:70px;
+	    }
+	    table{
+		font-style: italic;
+		color:#000080;
+	    }
+		
+	</style>	
+</head>
+<body>
+<div id="box" style="position:absolute;top:100px;" font-size="100px;"> 
+
+<?php
+
+ for($j = 0; $j<count($this->fourms); $j++){
+            foreach ($this->fourms[$j] as $keyFourm=>$valueFourm):
+                if($keyFourm =='forumName'){
+                    $forumName=$valueFourm;
+                }
+                if($keyFourm =='forumId'){
+                    $forumId=$valueFourm;
+                }
+                if($keyFourm =='catId'){
+                  //  if($valueFourm == $catId)
+                        {
+                                                 
+
+            echo "| <a href='".$this->baseUrl()."/post/list/id/".$forumId."'>".$forumName."</a> |";
+                           
+                          
+                          
+                    }
+                    
+                }
+            endforeach;
+        }    
+
+?>
+
+</div>
+
+<script>
+var e = document.getElementById("box");
+var s = 1;
+var t= 0;
+
+setInterval(function(){
+   t += 3;
+   e.style.left = t + 'px';
+  if(t>=1150)
+      t=0;
+}, 100);
+</script>
+
+
+
+
+
+
+
+
+
+<?php
+    $authorization =Zend_Auth::getInstance();
+    $info = $authorization->getIdentity();
+    $admin=$info->admin;
+?>
+
+<br /><br />
+<div id="view-content">
+	<!--p>View script for controller <b>fourm</b> and script/action name <b>list</b></p-->
+</div>
+<table>
+    <?php
+        if($admin==1){
+    ?>
+             <tr><td><a href="<?php echo $this->baseUrl()?>/fourm/addcategory" > add Catedory</a></td><td></td><td></td></tr>
+<?php
+        }
+for($i = 0; $i<count($this->categories); $i++){
+    
+    foreach ($this->categories[$i] as $keyCat=>$valueCat):
+        if($keyCat=='catId'){
+          $catId=$valueCat;  
+        }
+        if($keyCat == 'catName'){
+          echo "<tr><td>".$keyCat.": ".$valueCat ."</td>";
+          if($admin==1){
+          ?>
+          <td><a href="<?php echo $this->baseUrl()?>/fourm/addfourm/id/<?php echo $this->categories[$i]['catId'];?>" > add fourm </a></td>
+          <td><a href="<?php echo $this->baseUrl()?>/fourm/editcategory/id/<?php echo $this->categories[$i]['catId'];?>" > edit </a></td>
+          <td><a href="<?php echo $this->baseUrl()?>/fourm/deletecategory/id/<?php echo $this->categories[$i]['catId'];?>" > Delete </a></td></tr>
+           <?php
+          }
+        }
+     endforeach;  
+        for($j = 0; $j<count($this->fourms); $j++){
+            echo "<tr>";
+            foreach ($this->fourms[$j] as $keyFourm=>$valueFourm):
+                
+                if($keyFourm =='forumName'){
+                    $forumName=$valueFourm;
+                }
+                if($keyFourm =='forumId'){
+                    $forumId=$valueFourm;
+                }
+                if($keyFourm=='lockForum'){
+                  if($admin==1){
+                   if($valueFourm==0){
+                              echo "<td><a href='".$this->baseUrl()."/fourm/lock?id=".$this->fourms[$j]['forumId']."&lock=1' > Lock Forum </a></td>";  
+                   }else{
+                              echo "<td><a href='".$this->baseUrl()."/fourm/lock?id=".$this->fourms[$j]['forumId']."&lock=0' > UnLock Forum </a></td>"; 
+                   }
+                  }
+                }
+             
+                if($keyFourm =='catId'){
+                    if($valueFourm == $catId){
+                      
+                            echo "<td><a href='".$this->baseUrl()."/post/list/id/".$forumId."' > fourm name: ".$forumName ."</a></td>";
+                            //echo '<td>'.'add'.'</td>';
+                            if($admin==1){
+                            ?>
+                            <td><a href="<?php echo $this->baseUrl()?>/fourm/editfourm/id/<?php echo $this->fourms[$j]['forumId'];?>" > edit </a></td>
+                            <td><a href="<?php echo $this->baseUrl()?>/fourm/deletefourm/id/<?php echo $this->fourms[$j]['forumId'];?>" > Delete </a></td>
+                            
+                            <?php
+                            }
+                        
+                    }
+                    
+                }
+               
+            endforeach;
+            echo "</tr>";
+        }    
+   
+}
+?>
+</table>
+</html>

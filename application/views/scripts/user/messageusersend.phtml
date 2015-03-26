@@ -1,0 +1,27 @@
+<br /><br />
+<div id="view-content">
+	<!--p>View script for controller <b>user</b> and script/action name <b>messageusersend</b></p-->
+</div>
+<table>
+<?php
+
+for($i = 0; $i<count($this->message); $i++){
+     echo "<tr>";
+   foreach ($this->message[$i] as $key=>$value):
+        if($key=="messageId"){
+                $messageId=$this->message[$i]['messageId'];
+        }
+        if($key!='messageId' and $key!='receiver' and $key!='sender'){
+            
+            if($key=="subject"){
+               echo "<td>"."<a href='".$this->baseUrl()."/user/specificmessage/messageId/".$messageId." '>".$key." : ".$value."</a>"."</td>"; 
+            }else{
+                echo "<td>".$key." : ".$value ."</td>";
+            }
+        }
+    endforeach;
+     echo "</tr>";
+}
+
+?>
+</table>

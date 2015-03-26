@@ -1,0 +1,296 @@
+
+
+
+<br>
+<center>
+    Show posts
+    <br>
+
+<table border="2">
+    <tr>
+    
+        <td>Title</td>
+    <td>Author</td>
+    
+    
+ <?php  
+    if($this->user['admin'])
+      echo  "<td>static</td>";
+
+        ?>
+
+        
+        <?php
+        
+        
+$forumId= $this->posts;
+        
+for($i = 0; $i<count($this->posts); $i++){
+
+    
+$forumId=  $this->posts[$i]['forumId'];  
+}  
+
+
+$lock=$this->fourm['lockForum'];
+if(!$lock){
+?>
+         
+        
+        
+    <td colspan="2"> <center><a href="<?php echo $this->baseUrl()?>/post/add/id/<?php echo $forumId ?>" > Add Post </a></center> </td>
+<?php
+
+}
+else 
+    echo "<td colspan='2'>Action</td>";
+?>
+    </tr>
+<?php
+for($i = 0; $i<count($this->posts); $i++){
+    ?>
+        <tr>
+    <?php
+foreach ($this->posts[$i] as $key=>$value):
+    
+    ?>
+       
+        
+  
+        <?php
+                if($key=='checked')
+                {
+                     if($this->user['admin']){
+             if($this->posts[$i]['checked']=='checked')
+                             {
+?>
+                                  <td>
+                                  <?php
+                              echo "<a href='". $this->baseUrl()."/post/uncheck?id=". $this->posts[$i]['postId']."&forumId=".$this->posts[$i]['forumId']."' > ".'uncheck'." </a>"; 
+
+                              
+                }?>
+    </td>
+        <?php
+         
+                }}
+        
+        
+        else if($key=='postName'){
+                               if($this->posts[$i]['checked']=='checked') {
+
+            ?>
+    <td>
+    <?php
+           if($this->posts[$i]['checked']=='checked') 
+           echo "<a href='". $this->baseUrl()."/post/open/id/". $this->posts[$i]['postId']."' > ".$value." </a>"; 
+                               }
+           ?>
+    </td>
+        <?php
+           
+        }else if ($key=='userId'){
+            
+        if($this->posts[$i]['checked']=='checked') {
+
+            $user_model = new Application_Model_User();
+$user = $user_model->getUserById($value);
+
+            
+            ?>
+    <td>
+    
+        <?php
+           // echo $value ."<br />";
+        //echo $user[0]['userName']."<br />";
+        echo "<a href='".$this->baseUrl()."/user/profile/id/".$user[0]['userId']." '>".$user[0]['userName']."</a>"."<br/>";
+        }
+            ?>
+        </td>
+        
+        
+                <?php
+
+        }
+        
+        
+        
+        
+    ?>
+        
+    
+    
+    
+
+<?php
+   
+endforeach;
+                   if($this->posts[$i]['checked']=='checked') 
+                   {
+?>
+    
+        <?php
+        $authorization =Zend_Auth::getInstance();
+            $info = $authorization->getIdentity();
+            $name = $info->userName;
+            $id=$info->userId;
+             $admin =$this->user['admin'];
+        $userId=$this->posts[$i]['userId'];
+      
+        ?>
+        <td>
+        <?php
+        
+        if($admin ||  $id==$userId){
+     ?>
+        
+<a href="<?php echo $this->baseUrl()?>/post/edit?postId=<?php echo $this->posts[$i]['postId'];?>" > Edit </a> 
+<?php
+        }              
+?>
+</td>
+<td>
+
+ <?php
+                   if($admin ){
+     ?>
+<a href="<?php echo $this->baseUrl()?>/post/delete?postId=<?php echo $this->posts[$i]['postId'];?>&id=<?php echo $this->posts[$i]['forumId'];?>" > Delete </a>
+    
+        <?php
+        }
+        ?>
+        </td>
+</tr>
+
+
+
+<br />
+<?php
+}
+}
+
+
+////////////////////////
+
+for($i = 0; $i<count($this->posts); $i++){
+    ?>
+        <tr>
+    <?php
+foreach ($this->posts[$i] as $key=>$value):
+    
+    ?>
+       
+        
+  
+        <?php
+                if($key=='checked')
+                { if($this->user['admin']){
+             if($this->posts[$i]['checked']==NULL)
+                             {
+?>
+                                  <td>
+                                  <?php
+                              echo "<a href='". $this->baseUrl()."/post/check?id=". $this->posts[$i]['postId']."&forumId=".$this->posts[$i]['forumId']."' > ".'check'." </a>"; 
+
+                              
+                }?>
+    </td>
+        <?php
+         
+                }}
+        
+        
+        else if($key=='postName'){
+                               if($this->posts[$i]['checked']==NULL) {
+
+            ?>
+    <td>
+    <?php
+           if($this->posts[$i]['checked']==NULL) 
+           echo "<a href='". $this->baseUrl()."/post/open/id/". $this->posts[$i]['postId']."' > ".$value." </a>"; 
+                               }
+           ?>
+    </td>
+        <?php
+           
+        }else if ($key=='userId'){
+            
+        if($this->posts[$i]['checked']==NULL) {
+ $user_model = new Application_Model_User();
+$user = $user_model->getUserById($value);
+            
+            ?>
+    <td>
+    
+        <?php
+       //     echo $value ."<br />";
+                   // echo $user[0]['userName']."<br />";
+                    echo "<a href='".$this->baseUrl()."/user/profile/id/".$user[0]['userId']." '>".$user[0]['userName']."</a>"."<br />";
+
+        }
+            ?>
+        </td>
+        
+        
+                <?php
+
+        }
+        
+        
+        
+        
+    ?>
+        
+    
+    
+    
+
+<?php
+   
+endforeach;
+                   if($this->posts[$i]['checked']==NULL) 
+                   {
+?>
+       <?php
+        $authorization =Zend_Auth::getInstance();
+            $info = $authorization->getIdentity();
+            $name = $info->userName;
+            $id=$info->userId;
+             $admin =$this->user['admin'];
+        $userId=$this->posts[$i]['userId'];
+      
+        ?>
+        <td>
+        <?php
+        
+        if($admin ||  $id==$userId){
+     ?>
+        
+<a href="<?php echo $this->baseUrl()?>/post/edit?postId=<?php echo $this->posts[$i]['postId'];?>" > Edit </a> 
+<?php
+        }              
+?>
+</td>
+<td>
+
+ <?php
+                   if($admin ){
+     ?>
+<a href="<?php echo $this->baseUrl()?>/post/delete?postId=<?php echo $this->posts[$i]['postId'];?>&id=<?php echo $this->posts[$i]['forumId'];?>" > Delete </a>
+    
+        <?php
+        }
+        ?>
+        </td>
+</tr>
+
+
+
+<br />
+<?php
+}
+}
+
+?>
+</table>
+    </center>

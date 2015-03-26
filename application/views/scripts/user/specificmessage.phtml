@@ -1,0 +1,95 @@
+<html>
+    <?php
+        $authorization =Zend_Auth::getInstance();
+    $info = $authorization->getIdentity();
+    if(!empty($info)){
+       // $admin=$info->admin;
+        $userName=$info->userName;
+        //$userImage=$info->userImage;
+    }
+    ?>
+<br /><br />
+<div id="view-content">
+	
+</div>
+<p id='messageId' value='<?php echo $this->message['messageId'];?>'></p>
+<fieldset >
+    <div>   
+<?php
+//echo $this->baseUrl(); exit();
+    foreach ($this->message as $key=>$value):
+        
+        if($key!='messageId' and $key!='receiver' and $key!='sender'){
+            
+            
+                echo $key." : ".$value."<br/>" ;
+            
+        }
+    endforeach;
+    
+?>
+    </div>
+
+
+   <?php
+         for($i = 0; $i<count($this->reply); $i++){
+            foreach ($this->reply[$i] as $key=>$value):
+                if($key=='name'){
+                    $name=$this->reply[$i]['name'];
+                }
+                if($key!='messageId' && $key!='replyId' && $key!='name'){
+                    echo "<fieldset>".$name." : ".$value."<br/>"."</fieldset>" ;
+                }
+            endforeach;
+          }
+    ?>
+<div id="newReply"></div>
+
+<div id='reply'>
+    <button onclick="addReply(<?php echo $this->message['messageId'];?>,'<?php echo $userName;?>');">reply</button>
+    <?php
+        
+     //   echo $this->form;
+        
+    ?>
+    reply:<input type="textArea" id="x">
+</div>
+</fieldset>
+<script>
+   function addReply(y,replyerName){  
+      // alert(x);
+        var fieldset=document.getElementById("newReply");
+        var reply=document.getElementById("reply");
+        if(x.value!=""){
+            fieldset.innerHTML+=replyerName;
+            fieldset.innerHTML+=" : ";
+            fieldset.innerHTML+=x.value;
+            fieldset.innerHTML+="<br />";
+            ajax(x.value,y,replyerName);
+            x.value="";
+        }
+    }
+    
+    function ajax (reply,msgID,replyerName) { 
+		
+		if (window.XMLHttpRequest) {
+			ajaxRequest=new XMLHttpRequest(); 
+			
+		}else { 
+			ajaxRequest=new ActiveXObject("Microsoft.XMLHTTP"); 
+		}
+              
+                
+                ajaxRequest.open("GET","../../addreply/body/"+reply+"/messageId/"+msgID+"/name/"+replyerName,true);
+		ajaxRequest.send(); 
+		
+		ajaxRequest.onreadystatechange= function() {
+
+			/*if(ajaxRequest.readyState === 4 && ajaxRequest.status === 200) { 
+				//document.getElementById("result").innerHTML = "done";
+                                alert('done')
+			} */
+		}; 
+	}
+    </script>
+</html>
